@@ -31,7 +31,7 @@ class TestVisualization(unittest.TestCase):
     def test_ScatterPlotter(self):
         data = CSVParser(TEST_DATA_AMD).getColumnAsFloats("Close")
         labels = FixedTimeHorizon(data).label(5, 1.10, 0.90)
-        test = ScatterPlotter(data[0:len(data)-5], labels)
+        test = ScatterPlotter(data[0:len(data)-5], labels, show = False)
 
 if __name__ == "__main__":
     unittest.main()
