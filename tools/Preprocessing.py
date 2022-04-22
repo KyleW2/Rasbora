@@ -1,5 +1,3 @@
-from tools.Parsers import CSVParser
-
 """
 General conventions:
     classes GoLikeThis
@@ -41,10 +39,3 @@ class FixedTimeHorizon:
             f.write("instance,label\n")
             for i in range(0, len(labeled)):
                 f.write(f"{self.data[i]},{labeled[i]}\n")
-
-
-if __name__ == "__main__":
-    data = CSVParser("data/AMD.csv").getColumnFloat("Close")
-    
-    fth = FixedTimeHorizon(data)
-    fth.label(5, 1.10, 0.9, "test.csv")
