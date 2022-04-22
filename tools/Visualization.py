@@ -5,9 +5,9 @@ class ScatterPlotter():
         colors = []
         for i in range(0, len(labels)):
             if labels[i] == 1:
-                colors.append("g")
-            elif labels[i] == 0:
                 colors.append("b")
+            elif labels[i] == 0:
+                colors.append("#808080")
             else:
                 colors.append("r")
 
