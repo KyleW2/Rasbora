@@ -39,3 +39,5 @@ class FixedTimeHorizon:
             f.write("instance,label\n")
             for i in range(0, len(labeled)):
                 f.write(f"{self.data[i]},{labeled[i]}\n")
+        
+        return labeled
