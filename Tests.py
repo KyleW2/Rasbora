@@ -4,9 +4,10 @@ from tools.Parsers import CSVParser
 from tools.Preprocessing import FixedTimeHorizon
 from tools.Visualization import ScatterPlotter
 
+TEST_DATA_AMD = "data/test/AMD.csv"
 class TestParsers(unittest.TestCase):
     def test_CSVParser(self):
-        test = CSVParser("data/test_data/AMD.csv")
+        test = CSVParser(TEST_DATA_AMD)
 
         self.assertEqual(test.getColumnTitles(), ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'])
         self.assertEqual(type(test.getColumn("Close")), type([]))
@@ -15,7 +16,7 @@ class TestParsers(unittest.TestCase):
 
 class TestPreprocessing(unittest.TestCase):
     def test_FixedTimeHorizon(self):
-        data = CSVParser("data/test_data/AMD.csv").getColumnAsFloats("Close")
+        data = CSVParser(TEST_DATA_AMD).getColumnAsFloats("Close")
         test = FixedTimeHorizon(data)
         look_ahead = 5
         labeled = test.label(look_ahead, 1.10, 0.90)
@@ -28,7 +29,7 @@ class TestPreprocessing(unittest.TestCase):
 
 class TestVisualization(unittest.TestCase):
     def test_ScatterPlotter(self):
-        data = CSVParser("data/test_data/AMD.csv").getColumnAsFloats("Close")
+        data = CSVParser(TEST_DATA_AMD).getColumnAsFloats("Close")
         labels = FixedTimeHorizon(data).label(5, 1.10, 0.90)
         test = ScatterPlotter(data[0:len(data)-5], labels)
 
