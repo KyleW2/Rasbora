@@ -8,4 +8,7 @@
 - [ ] Implement real time data collection
 - [ ] Try K-Nearest neighbor
   - [ ] Pre-classify future instances for speed
-  - [ ] Try ensemble approach  
+  - [ ] Try ensemble approach
+- [ ] Start paper trading
+- [ ] Find an api (Alpacca?)
+- [ ] Start real trading
