@@ -5,16 +5,25 @@ from tools.Preprocessing import FixedTimeHorizon
 
 class TestParsers(unittest.TestCase):
     def test_CSVParser(self):
-        test = CSVParser("AMD.csv")
+        test = CSVParser("data/test_data/AMD.csv")
 
-        self.assertEquals(test.getColumnTitles("Date,Open,High,Low,Close,Adj Close,Volume"))
-        self.assertEquals(type(test.getColumn("Close")), type([]))
-        self.assertEquals(type(test.getColumn("Close")[0]), type(""))
-        self.assertEquals(type(test.getColumnAsFloats("Close")[0]), type(0.0))
+        self.assertEqual(test.getColumnTitles(), ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'])
+        self.assertEqual(type(test.getColumn("Close")), type([]))
+        self.assertEqual(type(test.getColumn("Close")[0]), type(""))
+        self.assertEqual(type(test.getColumnAsFloats("Close")[0]), type(0.0))
 
 class TestPreprocessing(unittest.TestCase):
-    def test_fixed_time_horizion(self):
-        pass
+    def test_FixedTimeHorizon(self):
+        data = CSVParser("data/test_data/AMD.csv").getColumnAsFloats("Close")
+        test = FixedTimeHorizon(data)
+        look_ahead = 5
+        labeled = test.label(look_ahead, 1.10, 0.90)
+        
+        # Might not always be true but works for now
+        self.assertEqual(len(labeled), len(data) - look_ahead)
+        self.assertTrue(1 in labeled)
+        self.assertTrue(0 in labeled)
+        self.assertTrue(-1 in labeled)
 
 if __name__ == "__main__":
     unittest.main()
