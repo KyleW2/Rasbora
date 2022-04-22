@@ -2,6 +2,7 @@ import unittest
 
 from tools.Parsers import CSVParser
 from tools.Preprocessing import FixedTimeHorizon
+from tools.Visualization import ScatterPlotter
 
 class TestParsers(unittest.TestCase):
     def test_CSVParser(self):
@@ -24,6 +25,12 @@ class TestPreprocessing(unittest.TestCase):
         self.assertTrue(1 in labeled)
         self.assertTrue(0 in labeled)
         self.assertTrue(-1 in labeled)
+
+class TestVisualization(unittest.TestCase):
+    def test_ScatterPlotter(self):
+        data = CSVParser("data/test_data/AMD.csv").getColumnAsFloats("Close")
+        labels = FixedTimeHorizon(data).label(5, 1.10, 0.90)
+        test = ScatterPlotter(data[0:len(data)-5], labels)
 
 if __name__ == "__main__":
     unittest.main()
