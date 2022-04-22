@@ -26,9 +26,9 @@ class FixedTimeHorizon:
         # Loop thru data
         for i in range(0, len(self.data) - look_ahead):
             # If threshold
-            if self.data[i] / self.data[i + look_ahead] >= buy_threshold:
+            if self.data[i + look_ahead] / self.data[i] >= buy_threshold:
                 labeled[i] = 1
-            elif self.data[i] / self.data[i + look_ahead] <= sell_threshold:
+            elif self.data[i + look_ahead] / self.data[i] <= sell_threshold:
                 labeled[i] = -1
             else:
                 labeled[i] = 0
