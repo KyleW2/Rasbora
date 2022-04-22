@@ -12,6 +12,7 @@ class CSVParser:
 
         f = open(self.file, "r")
         rows = f.read().splitlines()
+        f.close()
 
         for i in range(0, len(rows)):
             table.append(rows[i].split(","))
