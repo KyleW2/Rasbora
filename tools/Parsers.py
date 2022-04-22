@@ -1,3 +1,6 @@
+"""
+Reused parsing class, probably will be replaced
+"""
 
 class CSVParser:
     def __init__(self, file: str) -> None:
@@ -33,7 +36,7 @@ class CSVParser:
         
         return None
     
-    def getColumnFloat(self, title: str) -> list:
+    def getColumnAsFloats(self, title: str) -> list:
         column = []
 
         for i in range(0, len(self.table[0])):
@@ -44,8 +47,3 @@ class CSVParser:
                 return column
         
         return None
-
-if __name__ == "__main__":
-    test = CSVParser("AMD.csv")
-    print(test.getColumnTitles())
-    print(test.getColumn("Close"))
