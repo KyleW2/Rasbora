@@ -107,3 +107,34 @@ class FixedTimeHorizonMinimized:
                 f.write(f"{self.data[i]},{minimized[i]}\n")
         
         return minimized
+
+"""
+Moving averages label -1 for decrease, 1 for increase, 0 for no change
+"""
+
+class SimpleMovingAverage:
+    def __init__(self, data: str) -> None:
+        self.data = data
+    
+    def label(self) -> tuple:
+        labeled = [i for i in range(0, len(self.data))]
+        averages = [i for i in range(0, len(self.data))]
+        sum = 0
+
+        for i in range(0, len(self.data)):
+            sum += self.data[i]
+            averages[i] = sum / (i + 1)
+
+            if i == 0:
+                difference = 0 - averages[i]
+            else:
+                difference = averages[i-1] - averages[i]
+
+            if difference > 0:
+                labeled[i] = -1
+            elif difference < 0:
+                labeled[i] = 1
+            else:
+                labeled[i] = 0
+        
+        return labeled, averages
