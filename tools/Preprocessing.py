@@ -15,6 +15,9 @@ Terms:
     sell_threshold = precent decrease required for a sell
 """
 
+from matplotlib.pyplot import title
+
+
 class FixedTimeHorizon:
     def __init__(self, data: str) -> None:
         self.data = data
@@ -138,3 +141,39 @@ class SimpleMovingAverage:
                 labeled[i] = 0
         
         return labeled, averages
+    
+class Aggregator:
+    def __init__(self):
+        pass
+    
+    def combine(self, titles: list, columns: list, file_name: str = f"aggregated_data.csv") -> None:
+        # Error raising
+        if len(titles) != len(columns):
+            print("Inequal amount of titles for columns")
+            raise ValueError
+
+        for i in range(0, len(columns)):
+            if len(columns[i]) != len(columns[0]):
+                print("Column lengths are not equal")
+                raise ValueError
+        
+        # Open file
+        f = open(file_name, "w")
+
+        # Write title line
+        f.write(title[0])
+
+        for i in range(1, len(titles)):
+            f.write("," + str(titles[i]))
+
+        f.write("\n")
+
+        # Write columns
+        for i in range(0, len(columns[0])):
+            for j in range(0, len(columns)):
+                f.write(str(columns[j][i]) + ",")
+            f.write("\n")
+        
+        # Close
+        f.close()
+        return
