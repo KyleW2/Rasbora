@@ -2,7 +2,6 @@ import pytest
 
 from tools.Parsers import CSVParser
 from tools.Preprocessing import FixedTimeHorizon, FixedTimeHorizonMinimized, SimpleMovingAverage, Aggregator
-from tools.Visualization import ScatterPlot, ComparePlot
 
 TEST_DATA_AMD = "data/test/AMD.csv"
 TEST_DATA_INTC = "data/test/INTC.csv"
