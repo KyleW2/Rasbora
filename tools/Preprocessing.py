@@ -138,6 +138,36 @@ class SimpleMovingAverage:
                 labeled[i] = 0
         
         return labeled, averages
+
+class ExponentialMovingAverage:
+    def __init__(self, data: str, multiplier: float) -> None:
+        self.data = data
+        self.multiplier = multiplier
+    
+    def label(self) -> tuple:
+        labeled = [i for i in range(0, len(self.data))]
+        averages = [i for i in range(0, len(self.data))]
+        sum = 0
+
+        averages[0] = self.data[0]
+
+        for i in range(1, len(self.data)):
+            sum += self.data[i]
+            averages[i] = (self.multiplier * self.data[i]) + ((1 - self.multiplier) * averages[i-1])
+
+            if i == 0:
+                difference = 0 - averages[i]
+            else:
+                difference = averages[i-1] - averages[i]
+
+            if difference > 0:
+                labeled[i] = -1
+            elif difference < 0:
+                labeled[i] = 1
+            else:
+                labeled[i] = 0
+        
+        return labeled, averages
     
 class Aggregator:
     def __init__(self):

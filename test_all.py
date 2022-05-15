@@ -1,7 +1,7 @@
 import pytest
 
-from tools.Parsers import CSVParser
-from tools.Preprocessing import FixedTimeHorizon, FixedTimeHorizonMinimized, SimpleMovingAverage, Aggregator
+from tools.Parsers import *
+from tools.Preprocessing import *
 
 TEST_DATA_AMD = "data/test/AMD.csv"
 TEST_DATA_INTC = "data/test/INTC.csv"
@@ -14,7 +14,6 @@ def test_CSVParser():
     assert type(test.getColumn("Close")) == type([])
     assert type(test.getColumn("Close")[0]) == type("")
     assert type(test.getColumnAsFloats("Close")[0]) == type(0.0)
-
 
 def test_FixedTimeHorizon():
     data = CSVParser(TEST_DATA_AMD).getColumnAsFloats("Close")
@@ -48,7 +47,19 @@ def test_SimpleMovingAverage():
     assert 1 in labeled
     assert -1 in labeled
 
+def test_ExponentialMovingAverage():
+    data = CSVParser(TEST_DATA_AMD).getColumnAsFloats("Close")
+    test = ExponentialMovingAverage(data, 0.5)
+    labeled = test.label()[0]
+
+    assert 1 in labeled
+    assert -1 in labeled
+
 def test_Aggregator():
     with pytest.raises(ValueError):
         test = Aggregator()
         test.combine([1, 2], [[1, 2, 3], [1, 2]])
+    
+    with pytest.raises(ValueError):
+        test = Aggregator()
+        test.combine([1], [[1, 2, 3], [1, 2]])
