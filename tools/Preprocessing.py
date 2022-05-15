@@ -15,9 +15,6 @@ Terms:
     sell_threshold = precent decrease required for a sell
 """
 
-from matplotlib.pyplot import title
-
-
 class FixedTimeHorizon:
     def __init__(self, data: str) -> None:
         self.data = data
@@ -161,7 +158,7 @@ class Aggregator:
         f = open(file_name, "w")
 
         # Write title line
-        f.write(title[0])
+        f.write(titles[0])
 
         for i in range(1, len(titles)):
             f.write("," + str(titles[i]))
