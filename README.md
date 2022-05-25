@@ -8,10 +8,11 @@
   - [x] Create aggregated data
 - [ ] Implement real time data collection
 - [ ] Try K-Nearest neighbor
+  - [x] Implement
+  - [ ] Test
   - [ ] Pre-classify future instances for speed
-  - [ ] Try ensemble approach
-- [x] Try Perceptrons
-  - [ ] Implement
+- [ ] Try Perceptrons
+  - [x] Implement
   - [ ] Test
 - [ ] Start paper trading
 - [ ] Find an api (Alpacca?)
