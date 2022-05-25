@@ -6,8 +6,8 @@ from models.Perceptron import *
 from models.KNearestNeighbor import *
 
 # Constants
-TRAINING_FILE = "data/dev/training/INTC.csv"
-TEST_FILE = "data/dev/testing/INTC.csv"
+TRAINING_FILE = "data/dev/training/INTC_2.csv"
+TEST_FILE = "data/dev/testing/INTC_2.csv"
 LOOK_AHEAD = 20
 BUY_THRESHHOLD = 1.10
 SELL_THRESHHOLD = 0.9
@@ -31,7 +31,7 @@ instances = Instancizer([close, ema[1], sma[1]], labels[0:len(close) - LOOK_AHEA
 ptron = Perceptron(instances, 4, 0.1)
 """ptron.computeWeights(100)"""
 
-knn = KNearestNeighbor(instances, 1)
+knn = KNearestNeighbor(instances, 3)
 
 # Make test data
 parser = CSVParser(TEST_FILE)
@@ -43,4 +43,5 @@ test_instances = Instancizer([test_close, test_ema[1], test_sma[1]], labels[0:le
 
 # Test model
 test = Runway(knn, test_instances, test_close)
+print("---")
 print(test)
