@@ -1,6 +1,7 @@
 from tools.Parsers import *
 from tools.Preprocessing import *
 from tools.Instancizer import *
+from models.Perceptron import *
 
 # Constants
 DATA_FILE = "data/test/INTC.csv"
@@ -23,5 +24,6 @@ labels = FixedTimeHorizonMinimized(close).label(LOOK_AHEAD, BUY_THRESHHOLD, SELL
 # Create instances
 instances = Instancizer([close, ema[1], sma[1]], labels[0:len(close) - LOOK_AHEAD])
 
-print(instances)
 # Train model
+ptron = Perceptron(instances, 4, 0.1)
+ptron.computeWeights(100)
