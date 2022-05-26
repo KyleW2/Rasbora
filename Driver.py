@@ -4,13 +4,14 @@ from tools.Instancizer import *
 from tools.Runway import *
 from models.Perceptron import *
 from models.KNearestNeighbor import *
+from models.KNNConfidence import *
 
 # Constants
 TRAINING_FILE = "data/dev/training/INTC_2.csv"
 TEST_FILE = "data/dev/testing/INTC_2.csv"
-LOOK_AHEAD = 20
-BUY_THRESHHOLD = 1.10
-SELL_THRESHHOLD = 0.9
+LOOK_AHEAD = 10
+BUY_THRESHHOLD = 1.05
+SELL_THRESHHOLD = 0.97
 
 # Load data
 parser = CSVParser(TRAINING_FILE)
@@ -31,7 +32,7 @@ instances = Instancizer([close, ema[1], sma[1]], labels[0:len(close) - LOOK_AHEA
 ptron = Perceptron(instances, 4, 0.1)
 """ptron.computeWeights(100)"""
 
-knn = KNearestNeighbor(instances, 3)
+knn = KNNConfidence(instances, 5)
 
 # Make test data
 parser = CSVParser(TEST_FILE)
@@ -42,6 +43,13 @@ test_sma = SimpleMovingAverage(test_close).label()
 test_instances = Instancizer([test_close, test_ema[1], test_sma[1]], labels[0:len(test_close) - LOOK_AHEAD])
 
 # Test model
-test = Runway(knn, test_instances, test_close)
-print("---")
-print(test)
+f = open("NeighborTests.txt", "w")
+for i in range(1, 21):
+    f.write(f"Using {i} neighbors\n")
+    knn = KNNConfidence(instances, i)
+    test = Runway(knn, test_instances, test_close, 10, False)
+    f.write("---\n")
+    f.write(f"Profit: ${test}\n\n")
+f.close()
+
+# FIVE NEIGHBORS WIN
