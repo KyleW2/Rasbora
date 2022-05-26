@@ -9,7 +9,7 @@
 - [ ] Implement real time data collection
 - [ ] Try K-Nearest neighbor
   - [x] Implement
-  - [ ] Test
+  - [x] Test
   - [ ] Pre-classify future instances for speed
 - [ ] Try Perceptrons
   - [x] Implement
