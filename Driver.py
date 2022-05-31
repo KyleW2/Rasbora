@@ -3,9 +3,9 @@ from tools.Preprocessing import *
 from tools.Instancizer import *
 from tools.Runway import *
 from tools.Thunderdome import *
-from models.Perceptron import *
-from models.KNearestNeighbor import *
-from models.KNNConfidence import *
+from models.supervised.Perceptron import *
+from models.supervised.KNearestNeighbor import *
+from models.supervised.KNNConfidence import *
 
 # Constants
 TRAINING_FILE = "data/dev/training/INTC_2.csv"
