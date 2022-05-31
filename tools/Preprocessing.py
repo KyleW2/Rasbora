@@ -204,3 +204,15 @@ class Aggregator:
         # Close
         f.close()
         return
+
+def Normalize(stock: list, index: list, digits = 4) -> list:
+    if len(index) != len(stock):
+        print("Length of stock and index are not equal")
+        raise ValueError
+    
+    norms = []
+    for i in range(0, len(index)):
+        normalized = round(100 * (stock[i] / index[i]), digits)
+        norms.append(normalized)
+    
+    return norms
