@@ -2,8 +2,8 @@ from tools.Parsers import *
 from tools.Preprocessing import *
 from tools.Visualization import *
 
-TEST_DATA_AMD = "data/test/AMD.csv"
-TEST_DATA_INTC = "data/test/INTC.csv"
+TEST_DATA_AMD = "data/testing/AMD.csv"
+TEST_DATA_INTC = "data/testing/INTC.csv"
 
 def run_ScatterPlot():
     data = CSVParser(TEST_DATA_INTC).getColumnAsFloats("Close")
@@ -28,4 +28,7 @@ def AggregateData():
     gator = Aggregator()
     gator.combine(["index", "price", "sma", "ema"], [[x for x in range(len(data))], data, SimpleMovingAverage(data).label()[1], ExponentialMovingAverage(data, 0.0952).label()[1]], "data/test/aggregated/INTC_agg.csv")
 
-run_ComparePlot(20)
+look_ahead = 20
+data = CSVParser("data/dev/testing/INTC_2.csv").getColumnAsFloats("Close")
+labels = FTHMin1Hot(data).label(look_ahead, 1.10, 0.90)
+print(set(labels))
