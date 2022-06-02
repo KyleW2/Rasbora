@@ -21,6 +21,6 @@ norm = Normalize(close, ind_close, 3)
 env = Taiga(norm, close, 0.0)
 
 # Make agent
-agent = MonteCarloQ(env, 0.05, 0.0)
+agent = MonteCarloQ(env, 0.05, 1.0)
 
 agent.runSeries(100000)

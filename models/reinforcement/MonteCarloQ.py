@@ -99,17 +99,18 @@ class MonteCarloQ:
         f.close()
 
         for i in range(0, episodes):
-            f = open("mcq_results.csv", "a")
             start_time = time.time()
             profit = self.runEpisode()
-            f.write(f"{i},{'{:.2f}'.format(profit[0])},{'{:.2f}'.format(profit[1])},{'{:.2f}'.format(profit[0] - profit[1])},{profit[2]},{profit[3]},{profit[3]},{'{:.2f}'.format(time.time() - start_time, 2)}\n")
-            print(f"episode: {i}, made: {'{:.2f}'.format(profit[0])}, spent: {'{:.2f}'.format(profit[1])}, profit: {'{:.2f}'.format(profit[0] - profit[1])}, time: {'{:.2f}'.format(time.time() - start_time, 2)}")
-            
+
+            f = open("mcq_results.csv", "a")
+            f.write(f"{i},{'{:.2f}'.format(profit[0])},{'{:.2f}'.format(profit[1])},{'{:.4f}'.format(profit[0] - profit[1])},{profit[2]},{profit[3]},{profit[4]},{'{:.2f}'.format(time.time() - start_time, 2)}\n")
             f.close()
-            """
+
+            print(f"episode: {i}, epsilon: {self.epsilon}, time: {'{:.2f}'.format(time.time() - start_time, 2)}, profit: {'{:.4f}'.format(profit[0] - profit[1])}, ")    
+            
             if self.epsilon > .1:
                 self.epsilon *= .9999
-            """
+            
     
     def close(self):
         self.env.close()

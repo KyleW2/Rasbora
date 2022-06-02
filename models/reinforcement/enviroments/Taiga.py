@@ -36,9 +36,9 @@ class Taiga:
             reward = 0
             self.spent += self.values[self.current_index] * self.default_buy_amount
             self.portfolio.buy(self.values[self.current_index], self.default_buy_amount)
-        elif action == 0:
+        if action == 0:
             reward = self.portfolio.points(self.values[self.current_index])
-        elif action == -1:
+        if action == -1:
             self.made += self.portfolio.value()
             reward = self.portfolio.points(self.values[self.current_index])
             self.portfolio.dump()
