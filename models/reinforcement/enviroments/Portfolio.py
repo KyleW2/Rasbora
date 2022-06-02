@@ -19,6 +19,12 @@ class Portfolio:
     
     def points(self, current_price: float) -> float:
         sum = 0
+        for i in self.positions.values():
+            sum += i
+        if sum == 0:
+            return 0
+            
+        sum = 0
         change = 0
         for i in self.positions.keys():
             sum += self.positions[i]

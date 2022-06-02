@@ -1,3 +1,5 @@
+from .Portfolio import *
+
 """
 Taiga doesn't limit the agent to starting funds
 
@@ -9,17 +11,15 @@ Reward scheme:
 """
 
 class Taiga:
-    def __init__(self, states: list, values: list, commision: float) -> None:
+    def __init__(self, states: list, values: list, commision: float, default_buy_amount: int = 10) -> None:
         self.states = states
         self.values = values
 
-        # Amount spent
         self.spent = 0
-        # Amount made (not profit)
         self.made = 0
-        # Number of shares being held
-        self.holding = 0
+        self.portfolio = Portfolio()
 
+        self.default_buy_amount = default_buy_amount
         self.commision = commision
 
         self.current_index = 0
@@ -32,22 +32,16 @@ class Taiga:
         observation = self.states[self.current_index]
 
         # Rewards
-        if action == -1:
-            self.made += (1 - self.commision) * (self.holding * self.values[self.current_index])
-            self.holding = 0
-
-            if self.made > self.spent:
-                reward = 1
-            else:
-                reward = -1
-
-        if action == 0:
-            reward = 0
-        
         if action == 1:
-            self.holding += 1
-            self.spent += self.values[self.current_index]
-            reward = -1
+            reward = 0
+            self.spent += self.values[self.current_index] * self.default_buy_amount
+            self.portfolio.buy(self.values[self.current_index], self.default_buy_amount)
+        elif action == 0:
+            reward = self.portfolio.points(self.values[self.current_index])
+        elif action == -1:
+            self.made += self.portfolio.value()
+            reward = self.portfolio.points(self.values[self.current_index])
+            self.portfolio.dump()
 
         # Done
         done = False
@@ -60,7 +54,7 @@ class Taiga:
     def reset(self) -> float:
         self.spent = 0
         self.made = 0
-        self.holding = 0
+        self.portfolio = Portfolio()
 
         self.current_index = 0
 

@@ -4,11 +4,10 @@ from .states.MCQState import *
 from .Step import *
 
 class MonteCarloQ:
-    def __init__(self, enviroment: object, alpha: float, steps_to_explore: float, epsilon: float) -> None:
+    def __init__(self, enviroment: object, alpha: float, epsilon: float) -> None:
         self.env = enviroment
         
         self.alpha = alpha
-        self.steps_to_explore = steps_to_explore
         self.epsilon = epsilon
 
         # Keys: tuple = (norm)
@@ -60,6 +59,10 @@ class MonteCarloQ:
         done = False
         step = 0
 
+        b = 0
+        h = 0
+        s = 0
+
         # Loop for each step
         while not done:
             # Create tuple representing current state
@@ -71,9 +74,13 @@ class MonteCarloQ:
             
             # Find next action using e-greedy
             action = self.eGreey(stateTuple)
-
-            if step <= self.steps_to_explore:
-                action = self.randomAction()
+            
+            if action == 1:
+                b += 1
+            elif action == 0:
+                h += 1
+            elif action == -1:
+                s += 1
 
             # Observe r and s'
             observation, reward, done, made, spent = self.env.step(action)
@@ -84,16 +91,25 @@ class MonteCarloQ:
             step += 1
 
         self.updateV()
-        return (made, spent)
+        return (made, spent, b, h, s)
 
     def runSeries(self, episodes: int) -> None:
+        f = open("mcq_results.csv", "w")
+        f.write("episide,made,spent,profit,buys,holds,sells,time\n")
+        f.close()
+
         for i in range(0, episodes):
+            f = open("mcq_results.csv", "a")
             start_time = time.time()
             profit = self.runEpisode()
-            print(f"episode: {i}, profit: {'{:.2f}'.format(profit[0] - profit[1])}, made: {'{:.2f}'.format(profit[0])}, spent: {'{:.2f}'.format(profit[1])}, time: {'{:.2f}'.format(time.time() - start_time, 2)}")
-
+            f.write(f"{i},{'{:.2f}'.format(profit[0])},{'{:.2f}'.format(profit[1])},{'{:.2f}'.format(profit[0] - profit[1])},{profit[2]},{profit[3]},{profit[3]},{'{:.2f}'.format(time.time() - start_time, 2)}\n")
+            print(f"episode: {i}, made: {'{:.2f}'.format(profit[0])}, spent: {'{:.2f}'.format(profit[1])}, profit: {'{:.2f}'.format(profit[0] - profit[1])}, time: {'{:.2f}'.format(time.time() - start_time, 2)}")
+            
+            f.close()
+            """
             if self.epsilon > .1:
                 self.epsilon *= .9999
+            """
     
     def close(self):
         self.env.close()
