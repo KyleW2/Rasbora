@@ -7,7 +7,7 @@ class Perceptron:
         self.data = data
 
         # Initialize weights to random value in [-1, 1]
-        self.weights = [random.uniform(-1, 1)] * number_of_weights
+        self.weights = [random.uniform(-0.05, 0.05) for i in range(0, number_of_weights)]
         self.n = learning_rate
     
     def dot(self, x: list) -> float:

@@ -168,11 +168,11 @@ class FTHMin1Hot:
         # Change to 1-hot
         for i in range(0, len(minimized)):
             if minimized[i] == 1:
-                minimized[i] = (1, -1, -1)
+                minimized[i] = (1, 0, 0)
             elif minimized[i] == 0:
-                minimized[i] = (-1, 1, -1)
+                minimized[i] = (0, 1, 0)
             elif minimized[i] == -1:
-                minimized[i] = (-1, -1, 1)
+                minimized[i] = (0, 0, 1)
         
         # Write to csv is save_as
         if save_as:

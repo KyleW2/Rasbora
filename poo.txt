@@ -1,0 +1,8 @@
+
+1. dig +trace
+2. host -t ns amazon.com
+3. default gateway: netstat -r
+4. ping ....
+5. ip a |awk '/state UP/{print }'
+6. sudo nano /etc/hosts
+7. sudo service httpd start  

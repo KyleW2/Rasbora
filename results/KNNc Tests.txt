@@ -19,7 +19,7 @@ Profit: $29124.749858000014
 
 Using 4 neighbors
 ---
-Profit: $32122.239762999994
+Profit: $4122.239762999994
 
 Using 5 neighbors
 ---

@@ -6,6 +6,7 @@ from tools.Thunderdome import *
 from models.supervised.Perceptron import *
 from models.supervised.KNearestNeighbor import *
 from models.supervised.KNNConfidence import *
+from models.supervised.MultilayerPerceptron import MultilayerPerceptron
 
 # Constants
 TRAINING_FILE = "data/dev/training/INTC_2.csv"
@@ -24,7 +25,7 @@ ema = ExponentialMovingAverage(close, mul).label()
 sma = SimpleMovingAverage(close).label()
 
 # Make labels
-labels = FixedTimeHorizonMinimized(close).label(LOOK_AHEAD, BUY_THRESHHOLD, SELL_THRESHHOLD)
+labels = FTHMin1Hot(close).label(LOOK_AHEAD, BUY_THRESHHOLD, SELL_THRESHHOLD)
 labels = labels[0:len(close) - LOOK_AHEAD]
 
 def binary(data: list, label: int) -> list:
@@ -55,10 +56,12 @@ buy_ptron = Perceptron(buy_instances, NUMBER_OF_WEIGHTS, LEARNING_RATE)
 sell_ptron = Perceptron(sell_instances, NUMBER_OF_WEIGHTS, LEARNING_RATE)
 
 ITERATIONS = 10000
+"""
 buy_ptron.computeWeights(ITERATIONS)
 sell_ptron.computeWeights(ITERATIONS)
 
 knn = KNNConfidence(instances, 5)
+"""
 
 # Make test data
 parser = CSVParser(TEST_FILE)
@@ -79,7 +82,7 @@ for i in range(1, 21):
     f.write("---\n")
     f.write(f"Profit: ${test}\n\n")
 f.close()
-"""
+
 
 # Test ptron
 test = Thunderdome(buy_ptron, sell_ptron, test_instances, test_close, 10, False)
@@ -87,3 +90,25 @@ print(test)
 
 # (-1299.9900119999998, 24, 0) after 1000 iterations
 # (-2710.700003000001, 51, 0) after 10k iterations
+"""
+
+# Test NeuralNetwork
+mlp = MultilayerPerceptron(0.05, 3, 2, 3)
+mlp.back_propagate(instances, 1000)
+
+def flatten(y: list):
+    o = []
+    for i in range(0, len(y)):
+        o.append(round(y[i]))
+    return tuple(o)
+
+correct = 0
+other = 0
+for i in range(0, len(test_instances)):
+    if flatten(mlp.classify(test_instances[i].points)) == test_instances[i].label and test_instances[i].label != (0, 1, 0):
+        correct += 1
+    if test_instances[i].label != (0, 1, 0):
+        other += 1
+
+print(correct)
+print(other)

@@ -9,6 +9,7 @@
 - [ ] Implement real time data collection
 - [ ] Try K-Nearest neighbor
   - [x] Implement
+    - [ ] Try KD-Trees
   - [x] Test
   - [ ] Pre-classify future instances for speed
 - [ ] Try Perceptrons
