@@ -22,49 +22,72 @@ class Perceptron:
             self.weights[i] += self.n * delta * x[i]
 
 class MultilayerPerceptron:
-    def __init__(self, learning_rate: float, input_size: int, hidden_layers: int, output_size: int) -> None:
+    def __init__(self, learning_rate: float, input_size: int, hidden_layers: tuple, output_size: int) -> None:
         # Input layer simply distributes the instance with an added bias
         self.input_layer = []
 
         # Hidden layer classifies the input forward
-        self.hidden_layer = [Perceptron(input_size, learning_rate) for i in range(0, hidden_layers)]
+        ptrons_per_layer = hidden_layers[0]
+        number_of_hidden_layers = hidden_layers[1]
+
+        # List of layers
+        self.hidden_layers = []
+
+        # Append first layer with input weights
+        self.hidden_layers.append([Perceptron(input_size, learning_rate) for i in range(0, ptrons_per_layer)])
+
+        # Append other layers
+        for i in range(0, number_of_hidden_layers - 1):
+            self.hidden_layers.append([Perceptron(ptrons_per_layer, learning_rate) for i in range(0, ptrons_per_layer)])
         
         # Output layer classifies the hidden output with an added bias
-        self.output_layer = [Perceptron(hidden_layers, learning_rate) for i in range(0, output_size)]
+        self.output_layer = [Perceptron(ptrons_per_layer, learning_rate) for i in range(0, output_size)]
     
     def classify(self, y: list) -> None:
-        # Creates input layer with added bias
+        # Creates input layer
         self.input_layer = []
         for i in range(0, len(y)):
             self.input_layer.append(y[i])
         
-        # Classifies the hidden layer with bias
-        hidden_classified = []
-        for i in range(0, len(self.hidden_layer)):
-            hidden_classified.append(self.hidden_layer[i].classify(self.input_layer))
+        # Classifies the first hidden layer
+        hidden_classified = [[]]
+        for i in range(0, len(self.hidden_layers[0])):
+            hidden_classified[0].append(self.hidden_layers[0][i].classify(self.input_layer))
+
+        # Classify subsequent layers
+        for i in range(1, len(self.hidden_layers)):
+            hidden_classified.append([])
+            for j in range(0, len(self.hidden_layers[i])):
+                hidden_classified[i].append(self.hidden_layers[i][j].classify(hidden_classified[i-1]))
         
         # Output layer makes the final classification
         output_classified = []
         for i in range(0, len(self.output_layer)):
-            output_classified.append(self.output_layer[i].classify(hidden_classified))
+            output_classified.append(self.output_layer[i].classify(hidden_classified[len(hidden_classified)-1]))
         
         return output_classified
     
     def classify_by_layer(self, y: list) -> None:
-        # Creates input layer with added bias
+        # Creates input layer
         self.input_layer = []
         for i in range(0, len(y)):
             self.input_layer.append(y[i])
         
-        # Classifies the hidden layer with bias
-        hidden_classified = []
-        for i in range(0, len(self.hidden_layer)):
-            hidden_classified.append(self.hidden_layer[i].classify(y))
+        # Classifies the first hidden layer
+        hidden_classified = [[]]
+        for i in range(0, len(self.hidden_layers[0])):
+            hidden_classified[0].append(self.hidden_layers[0][i].classify(self.input_layer))
 
+        # Classify subsequent layers
+        for i in range(1, len(self.hidden_layers)):
+            hidden_classified.append([])
+            for j in range(0, len(self.hidden_layers[i])):
+                hidden_classified[i].append(self.hidden_layers[i][j].classify(hidden_classified[i-1]))
+        
         # Output layer makes the final classification
         output_classified = []
         for i in range(0, len(self.output_layer)):
-            output_classified.append(self.output_layer[i].classify(hidden_classified))
+            output_classified.append(self.output_layer[i].classify(hidden_classified[len(hidden_classified)-1]))
         
         return self.input_layer, hidden_classified, output_classified
     
@@ -105,6 +128,6 @@ class MultilayerPerceptron:
                     self.hidden_layer[k].update_weights(delta_h, input_layer)
 
 if __name__ == "__main__":
-    mlp = MultilayerPerceptron(0.05, 2, 3, 1)
+    mlp = MultilayerPerceptron(0.05, 2, (5, 1), 1)
 
-    mlp.back_propagate([[1, 2]], iterations)
+    print(mlp.classify_by_layer([1,2]))
