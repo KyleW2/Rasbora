@@ -8,17 +8,31 @@ class Neuron:
         self.losses = [0 for i in range(0, number_of_weights)]
     
     def dot(self, x: list) -> float:
-        return np.dot(self.weights, x)
+        weights_plus_bias = [w for w in self.weights]
+        weights_plus_bias.insert(0, 1)
+        x_plus_bias = [a for a in x]
+        x_plus_bias.insert(0, 1)
+
+        return np.dot(weights_plus_bias, x_plus_bias)
     
-    def sign(self, x: list) -> float:
+    def step(self, x: list) -> int:
+        if self.dot(x) >= 0:
+            return 1
+        return 0
+    
+    def sigmoid(self, x: list) -> float:
         return 1 / (1 + (math.e ** (-1 * self.dot(x))))
     
     def classify(self, x: list) -> float:
-        return self.sign(x)
+        return self.step(x)
     
     def reset(self) -> None:
         for loss in self.losses:
             loss = 0
+    
+    def update_weights(self, n: float, T: int, loss: float, points: list) -> None:
+        for i in range(0, len(self.weights)):
+            self.weights[i] -= (n / T) * (loss * (-1 * points[i]))
 
 class Layer:
     def __init__(self, number_of_neurons: int, number_of_weights: int) -> None:
@@ -34,6 +48,10 @@ class Layer:
         for neuron in self.neurons:
             neuron.reset()
     
+    def update_neurons(self, n: float, T: int, loss: float, points: list) -> None:
+        for neuron in self.neurons:
+            neuron.update_weights(n, T, loss, points)
+    
 class NeuralNetwork:
     def __init__(self, learning_rate: float, input_dimension: int, hidden_dimensions: tuple, output_dimension: int) -> None:
         self.n = learning_rate
@@ -48,9 +66,8 @@ class NeuralNetwork:
         input = x
         output = []
 
-        for i in range(0, len(self.hidden_layers)):
-            input = self.hidden_layers[i].classify(input)
-            print(input)
+        for layer in self.hidden_layers:
+            input = layer.classify(input)
         
         return self.output_layer.classify(input)
     
@@ -58,13 +75,13 @@ class NeuralNetwork:
         for layer in self.hidden_layers:
             layer.reset()
         
-        output_layer.reset()
+        self.output_layer.reset()
     
     def back_propagate(self, training_instances: list, iterations: float) -> None:
         for i in range(0, iterations):
             self.reset()
             for t in range(0, len(training_instances)):
-                Y_t = self.classify(training_instances[t].instance)
+                Y_t = self.classify(training_instances[t].points)
                 d_t = training_instances[t].label
 
                 """
@@ -72,11 +89,38 @@ class NeuralNetwork:
                 Update each weight with n/T * loss
                 """
 
+                # First compute d_t - Y_t to be used in all updates
+                loss = np.subtract(d_t, Y_t)[0] # <- take the first index since numpy will return an array of len 1
+                T = len(training_instances)
 
+                # Pass error to all neurons for weight updates
+                input = training_instances[t].points
+                for layer in self.hidden_layers:
+                    layer.update_neurons(self.n, T, loss, input)
+                    input = layer.classify(input)
+                
+                self.output_layer.update_neurons(self.n, T, loss, input)
+
+
+class Instance:
+    def __init__(self, points: list, label: int) -> None:
+        self.points = points
+        self.label = label
 
 def main():
-    nn = NeuralNetwork(2, (3, 3), 6)
-    print(nn.classify([1, 2]))
+    nn = NeuralNetwork(0.05, 2, (1, 2), 1)
+    instances = [Instance([0, 0], [0]), Instance([0, 1], [1]), Instance([1, 0], [1]), Instance([1, 1], [0])]
+
+    nn.back_propagate(instances, 1000)
+
+    correct = 0
+    for instance in instances:
+        c = nn.classify(instance.points)
+        
+        if c == instance.label:
+            correct += 1
+    
+    print(f"{correct} correct predictions out of {len(instances)} instances")
 
 if __name__ == "__main__":
     main()

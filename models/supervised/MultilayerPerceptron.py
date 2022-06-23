@@ -128,6 +128,6 @@ class MultilayerPerceptron:
                     self.hidden_layer[k].update_weights(delta_h, input_layer)
 
 if __name__ == "__main__":
-    mlp = MultilayerPerceptron(0.05, 2, (5, 1), 1)
+    mlp = MultilayerPerceptron(0.05, 2, (3, 1), 1)
 
     print(mlp.classify_by_layer([1,2]))

@@ -31,17 +31,22 @@ class Taiga:
         # Observation
         observation = self.states[self.current_index]
 
-        # Rewards
+        # Action
         if action == 1:
-            reward = 0
             self.spent += self.values[self.current_index] * self.default_buy_amount
             self.portfolio.buy(self.values[self.current_index], self.default_buy_amount)
-        if action == 0:
-            reward = self.portfolio.points(self.values[self.current_index])
         if action == -1:
             self.made += self.portfolio.value()
-            reward = self.portfolio.points(self.values[self.current_index])
             self.portfolio.dump()
+
+        # Rewards
+        points = self.portfolio.points(self.values[self.current_index])
+        if points >= 0.5:
+            reward = 1
+        elif points < -0.5:
+            reward = -1
+        else:
+            reward = 0
 
         # Done
         done = False

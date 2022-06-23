@@ -106,7 +106,7 @@ class MonteCarloQ:
             f.write(f"{i},{'{:.2f}'.format(profit[0])},{'{:.2f}'.format(profit[1])},{'{:.4f}'.format(profit[0] - profit[1])},{profit[2]},{profit[3]},{profit[4]},{'{:.2f}'.format(time.time() - start_time, 2)}\n")
             f.close()
 
-            print(f"episode: {i}, epsilon: {self.epsilon}, time: {'{:.2f}'.format(time.time() - start_time, 2)}, profit: {'{:.4f}'.format(profit[0] - profit[1])}, ")    
+            print(f"episode: {i}, epsilon: {self.epsilon}, time: {'{:.2f}'.format(time.time() - start_time, 2)}, profit: {'{:.4f}'.format(profit[0] - profit[1])}, {profit[2]}, {profit[3]}, {profit[4]}")    
             
             if self.epsilon > .1:
                 self.epsilon *= .9999
