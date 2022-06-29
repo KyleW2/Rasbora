@@ -2,7 +2,7 @@ from tools.Parsers import *
 from tools.Preprocessing import *
 from models.reinforcement.enviroments.Taiga import *
 from models.reinforcement.enviroments.Redwoods import *
-from models.reinforcement.MonteCarloQ import *
+from models.reinforcement.MCQRange import *
 
 # Constants
 STOCK_FILE = "data/dev/testing/INTC_for_index.csv"
@@ -26,10 +26,10 @@ class StockPoint:
 data = [StockPoint(norm[i], close[i]) for i in range(0, len(norm))]
 
 # Make enviroment
-env = Redwoods(data, 0.0)
+env = Redwoods(data, 0.0, starting_funds = 10000)
 
 # Make agent
-agent = MonteCarloQ(env, 0.05, 1.0)
+agent = MonteCarloQ(env, 0.05, 1.0, 10)
 
 try:
     agent.runSeries_Redwoods(100000)

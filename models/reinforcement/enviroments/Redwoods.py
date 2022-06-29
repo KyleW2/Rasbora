@@ -16,15 +16,17 @@ class Redwoods:
 
     def step(self, action: int) -> None:
         # Do the action
-        if action == 1:
-            if self.funds >= self.states[self.current_index].price * self.default_buy_amount:
-                self.funds -= self.states[self.current_index].price * self.default_buy_amount
-                self.portfolio.buy(self.states[self.current_index].price, self.default_buy_amount)
+        if action > 0:
+            if self.funds >= self.states[self.current_index].price * action:
+                self.funds -= self.states[self.current_index].price * action
+                self.portfolio.buy(self.states[self.current_index].price, action)
         elif action == 0:
             pass
-        elif action == -1:
-            self.funds += self.portfolio.value()
-            self.portfolio.dump()
+        elif action < 0:
+            possible_to_sell = self.portfolio.sell(self.states[self.current_index].price, -1 * action)
+
+            if possible_to_sell:
+                self.funds += self.states[self.current_index].price * (-1 * action)
 
         # Observation
         self.current_index += 1
