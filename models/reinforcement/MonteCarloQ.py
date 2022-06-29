@@ -83,7 +83,7 @@ class MonteCarloQ:
                 s += 1
 
             # Observe r and s'
-            observation, reward, done, made, spent = self.env.step(action)
+            observation, reward, done, value = self.env.step(action)
 
             # Add step to episode
             self.episode.append(Step(stateTuple, action, reward))
@@ -91,9 +91,9 @@ class MonteCarloQ:
             step += 1
 
         self.updateV()
-        return (made, spent, b, h, s)
+        return value
 
-    def runSeries(self, episodes: int) -> None:
+    def runSeries_Taiga(self, episodes: int) -> None:
         f = open("mcq_results.csv", "w")
         f.write("episide,made,spent,profit,buys,holds,sells,time\n")
         f.close()
@@ -109,8 +109,16 @@ class MonteCarloQ:
             print(f"episode: {i}, epsilon: {self.epsilon}, time: {'{:.2f}'.format(time.time() - start_time, 2)}, profit: {'{:.4f}'.format(profit[0] - profit[1])}, {profit[2]}, {profit[3]}, {profit[4]}")    
             
             if self.epsilon > .1:
-                self.epsilon *= .9999
-            
+                self.epsilon *= .999
+    
+    def runSeries_Redwoods(self, episodes: int) -> None:
+        for i in range(0, episodes):
+            start_time = time.time()
+            value = self.runEpisode()
+            print(f"episode: {i}, epsilon: {'{:.3f}'.format(self.epsilon)}, time: {'{:.2f}'.format(time.time() - start_time)}, ending value: {value}")
+
+            self.epsilon *= .999
     
     def close(self):
         self.env.close()
+        return self.policy

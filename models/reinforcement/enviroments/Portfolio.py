@@ -39,6 +39,14 @@ class Portfolio:
         
         return v
     
+    def holding(self) -> int:
+        holding = 0
+
+        for h in self.positions.values():
+            holding += h
+
+        return holding
+
     def dump(self) -> float:
         v = 0
         for i in self.positions.keys():
@@ -51,4 +59,5 @@ if __name__ == "__main__":
     p = Portfolio()
     p.buy(10, 1)
     p.buy(11, 1)
+    print(p.positions)
     print(p.points(15))

@@ -1,6 +1,7 @@
 from tools.Parsers import *
 from tools.Preprocessing import *
 from models.reinforcement.enviroments.Taiga import *
+from models.reinforcement.enviroments.Redwoods import *
 from models.reinforcement.MonteCarloQ import *
 
 # Constants
@@ -17,10 +18,21 @@ ind_close = ind_parser.getColumnAsFloats("Close")
 # Make data
 norm = Normalize(close, ind_close, 3)
 
+class StockPoint:
+    def __init__(self, norm: float, price: float) -> None:
+        self.norm = norm
+        self.price = price
+
+data = [StockPoint(norm[i], close[i]) for i in range(0, len(norm))]
+
 # Make enviroment
-env = Taiga(norm, close, 0.0)
+env = Redwoods(data, 0.0)
 
 # Make agent
 agent = MonteCarloQ(env, 0.05, 1.0)
 
-agent.runSeries(100000)
+try:
+    agent.runSeries_Redwoods(100000)
+except KeyboardInterrupt:
+    #print(agent.close())
+    pass
