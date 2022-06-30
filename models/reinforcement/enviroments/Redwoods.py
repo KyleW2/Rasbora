@@ -1,8 +1,10 @@
+import random
 from .Portfolio import *
 
 class Redwoods:
-    def __init__(self, states: list, commision: float, default_buy_amount: int = 10, starting_funds: int = 10000) -> None:
-        self.states = states
+    def __init__(self, data: list, commision: float, default_buy_amount: int = 10, starting_funds: int = 10000) -> None:
+        self.data = data
+        self.states = random.choice(self.data)
 
         self.portfolio = Portfolio()
 
@@ -44,6 +46,7 @@ class Redwoods:
         return observation, reward, done, self.portfolio.value()
 
     def reset(self) -> None:
+        self.states = random.choice(self.data)
         self.portfolio = Portfolio()
         self.current_index = 0
         self.old_value = 0
