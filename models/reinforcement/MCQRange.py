@@ -61,9 +61,7 @@ class MonteCarloQ:
         done = False
         step = 0
 
-        b = 0
-        h = 0
-        s = 0
+        bhs = []
 
         # Loop for each step
         while not done:
@@ -77,12 +75,12 @@ class MonteCarloQ:
             # Find next action using e-greedy
             action = self.eGreey(stateTuple)
             
-            if action == 1:
-                b += 1
+            if action > 0:
+                bhs.append("b")
             elif action == 0:
-                h += 1
-            elif action == -1:
-                s += 1
+                bhs.append("h")
+            elif action < 0:
+                bhs.append("s")
 
             # Observe r and s'
             observation, reward, done, value = self.env.step(action)
@@ -93,7 +91,7 @@ class MonteCarloQ:
             step += 1
 
         self.updateV()
-        return value
+        return value, bhs
 
     def runSeries_Taiga(self, episodes: int) -> None:
         f = open("mcq_results.csv", "w")
@@ -114,12 +112,21 @@ class MonteCarloQ:
                 self.epsilon *= .999
     
     def runSeries_Redwoods(self, episodes: int) -> None:
-        for i in range(0, episodes):
+        start_time = time.time()
+        value = self.runEpisode()
+        first_bhs = value[1]
+        value = value[0]
+
+        for i in range(0, episodes - 1):
             start_time = time.time()
             value = self.runEpisode()
+            last_bhs = value[1]
+            value = value[0]
             print(f"episode: {i}, epsilon: {'{:.3f}'.format(self.epsilon)}, time: {'{:.2f}'.format(time.time() - start_time)}, ending value: {value}")
 
             self.epsilon *= .999
+        
+        return first_bhs, last_bhs
     
     def close(self):
         self.env.close()

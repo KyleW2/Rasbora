@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import time
 
 class ScatterPlot():
-    def __init__(self, data: list, labels: list, show: bool = True) -> None:
+    def __init__(self, data: list, labels: list, show: bool = True, save: bool = True) -> None:
         colors = []
         for i in range(0, len(labels)):
             if labels[i] == 1:
@@ -16,6 +16,9 @@ class ScatterPlot():
 
         if show:
             plt.show()
+        
+        if save:
+            plt.savefig(f"plot_{time.time()}.jpg", dpi = 300)
 
 class ComparePlot():
     def __init__(self, data1: list, data2: list, labels: list, show: bool = True, save: bool = False) -> None:

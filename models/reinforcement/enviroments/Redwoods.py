@@ -2,14 +2,13 @@ import random
 from .Portfolio import *
 
 class Redwoods:
-    def __init__(self, data: list, commision: float, default_buy_amount: int = 10, starting_funds: int = 10000) -> None:
+    def __init__(self, data: list, commision: float, starting_funds: int = 10000) -> None:
         self.data = data
         self.states = random.choice(self.data)
 
         self.portfolio = Portfolio()
 
         self.commision = commision
-        self.default_buy_amount = default_buy_amount
         self.starting_funds = starting_funds
 
         self.current_index = 0
@@ -28,7 +27,7 @@ class Redwoods:
             possible_to_sell = self.portfolio.sell(self.states[self.current_index].price, -1 * action)
 
             if possible_to_sell:
-                self.funds += self.states[self.current_index].price * (-1 * action)
+                self.funds += (1.0 - self.commision) * (self.states[self.current_index].price * (-1 * action))
 
         # Observation
         self.current_index += 1
